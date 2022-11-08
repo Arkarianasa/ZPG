@@ -2,7 +2,7 @@
 
 Shader::Shader()
 {
-	shaderProgram = loadShader("Vertex.txt", "Fragment.txt"); //default shaders
+	shaderProgram = loadShader("shaders/VertexColor.txt", "shaders/FragmentColor.txt"); //default shaders
 	viewMatrix = glm::mat4(1.0f);
 	projectionMatrix = glm::mat4(1.0f);
 	/*
@@ -40,10 +40,11 @@ Shader::~Shader()
 {
 }
 
-void Shader::update(glm::mat4 vMatrix, glm::mat4 pMatrix)
+void Shader::update(glm::mat4 vMatrix, glm::mat4 pMatrix, glm::vec3 cameraPos)
 {
 	viewMatrix = vMatrix;
 	projectionMatrix = pMatrix;
+	cameraEyePosition = cameraPos;
 }
 
 Shader::Shader(const char* vertexFile, const char* fragmentFile)
@@ -54,11 +55,14 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
 	projectionMatrix = glm::mat4(1.0f);
 }
 
-void Shader::useShaderProgram(glm::mat4 modelMatrix)
+void Shader::useShaderProgram(glm::mat4 modelMatrix, glm::vec3 color)
 {
 	GLint idModelTransform = glGetUniformLocation(shaderProgram, "modelMatrix");
 	GLint idViewTransform = glGetUniformLocation(shaderProgram, "viewMatrix");
 	GLint idProjectionTransform = glGetUniformLocation(shaderProgram, "projectionMatrix");
+
+	GLint idCameraPosition = glGetUniformLocation(shaderProgram, "cameraPos");
+	GLint idColor = glGetUniformLocation(shaderProgram, "uniformColor");
 
 	if (idModelTransform == -1)
 		printf("Model Matrix not found!!!\n");
@@ -76,5 +80,18 @@ void Shader::useShaderProgram(glm::mat4 modelMatrix)
 	glUniformMatrix4fv(idModelTransform, 1, GL_FALSE, &modelMatrix[0][0]); //location, count, transpose, *value
 	glUniformMatrix4fv(idViewTransform, 1, GL_FALSE, &viewMatrix[0][0]); //location, count, transpose, *value
 	glUniformMatrix4fv(idProjectionTransform, 1, GL_FALSE, &projectionMatrix[0][0]); //location, count, transpose, *value
+
+	if (idCameraPosition != -1)
+	{
+		glUniform3fv(idCameraPosition, 1, &cameraEyePosition[0]);
+		printf("Camera %f %f %f\n", cameraEyePosition.x, cameraEyePosition.y, cameraEyePosition.z);
+	}
+
+	if (idColor != -1)
+	{
+			glUniform3fv(idColor, 1, &color[0]);
+			printf("Color\n");
+	}
+
 }
 

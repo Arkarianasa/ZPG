@@ -20,6 +20,8 @@ private:
 
 	glm::mat4 viewMatrix;
 	glm::mat4 projectionMatrix;
+	glm::vec3 cameraEyePosition = { 0.0 , 0.0 , 10.0 };
+	glm::vec3 shaderColor = { 0.0 , 0.0, 1.0 };
 
 public:
 
@@ -27,7 +29,7 @@ public:
 	Shader(const char* vertexFile, const char* fragmentFile);
 	~Shader();
 
-	virtual void update(glm::mat4 vMatrix, glm::mat4 pMatrix) override;
+	virtual void update(glm::mat4 vMatrix, glm::mat4 pMatrix, glm::vec3 cameraPos) override;
 
-	void useShaderProgram(glm::mat4 modelMatrix);
+	void useShaderProgram(glm::mat4 modelMatrix, glm::vec3 color);
 };

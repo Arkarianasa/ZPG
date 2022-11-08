@@ -26,7 +26,7 @@ void Camera::notify()
   for (Observer* observer : observers)
   {
     calculateViewMatrix();
-    observer->update(viewMatrix, projectionMatrix);
+    observer->update(viewMatrix, projectionMatrix, eye);
   }
 }
 
@@ -91,15 +91,6 @@ void Camera::setNewTarget(double mouseXPos, double mouseYPos)
     double x = oldMouseXPos - mouseXPos;
     double y = oldMouseYPos - mouseYPos;
 
-    
-
-    //phi += x * mouseSpeed;
-    //alpha += y * mouseSpeed;
-
-    //printf("x: %f y: %f\nphi: %f alpha: %f\n", x, y, glm::degrees(phi), glm::degrees(alpha));
-    
-
-    
     if (x > 0) {
       phi -= mouseSpeed;
     }

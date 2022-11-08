@@ -9,7 +9,6 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
-#include "ColorPoint.h"
 #include "Shader.h"
 #include "Model.h"
 
@@ -20,16 +19,18 @@ private:
 	GLuint VAO = 0;
 	Shader shader;
 	glm::mat4 mMatrix; // transformacni modelova matice
+	glm::vec3 color = { 0.0, 1.0, 0.0 }; // default BLUE COLOR
 
 public:
 	RenderedObject(Model* m);
 	void addShader(Shader s);
+	void setColor(glm::vec3 c);
 	Shader* getShader();
 	void draw();
-	void rotate(float angle, glm::vec3 axes);
+	void rotateObject(float angle, glm::vec3 axes);
 	void rotateAroundPoint(float angle, glm::vec3 axes, glm::vec3 vector);
-	void translate(float myView);
-	void scale(float s);
+	void moveObject(glm::vec3 vector);
+	void scaleObject(float s);
 	~RenderedObject();
 
 };

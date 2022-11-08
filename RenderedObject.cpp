@@ -10,7 +10,8 @@ RenderedObject::RenderedObject(Model* m)
   glGenBuffers(1, &VBO); // generate the VBO
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-  glBufferData(GL_ARRAY_BUFFER, model->count * sizeof(ColorPoint), m->points, GL_STATIC_DRAW);
+  //glBufferData(GL_ARRAY_BUFFER, model->count * sizeof(ColorPoint), m->points, GL_STATIC_DRAW);
+  model->Draw();
 
   this->VAO = 0;
   glGenVertexArrays(1, &this->VAO); //generate the VAO
@@ -21,8 +22,13 @@ RenderedObject::RenderedObject(Model* m)
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (GLvoid*)0);
-  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)0); // x, y, z
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)(3 * sizeof(float))); // color / normal
+}
+
+void RenderedObject::setColor(glm::vec3 c)
+{
+  color = c;
 }
 
 void RenderedObject::addShader(Shader s)
@@ -35,7 +41,7 @@ Shader* RenderedObject::getShader()
   return &shader;
 }
 
-void RenderedObject::rotate(float angle, glm::vec3 axes)
+void RenderedObject::rotateObject(float angle, glm::vec3 axes)
 {
   mMatrix *= glm::rotate(glm::mat4(1.0f), angle, axes);
 }
@@ -47,12 +53,12 @@ void RenderedObject::rotateAroundPoint(float angle, glm::vec3 axes, glm::vec3 ve
   mMatrix *= glm::translate(glm::mat4(1.0f), -vector);
 }
 
-void RenderedObject::translate(float myView)
+void RenderedObject::moveObject(glm::vec3 vector)
 {
-  mMatrix *= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, myView));
+  mMatrix *= glm::translate(glm::mat4(1.0f), vector);
 }
 
-void RenderedObject::scale(float s)
+void RenderedObject::scaleObject(float s)
 {
   mMatrix *= glm::scale(glm::mat4(1.0f), glm::vec3(s));
 }
@@ -60,10 +66,11 @@ void RenderedObject::scale(float s)
 void RenderedObject::draw()
 {
 
-  shader.useShaderProgram(mMatrix);
+  shader.useShaderProgram(mMatrix, color);
 
   glBindVertexArray(VAO);
-  glDrawArrays(GL_TRIANGLE_FAN, 0, model->count); //mode, first, count
+  //glDrawArrays(GL_TRIANGLE_FAN, 0, model->count); //mode, first, count
+  glDrawArrays(GL_TRIANGLES, 0, model->count); //mode, first, count
 }
 
 RenderedObject::~RenderedObject()

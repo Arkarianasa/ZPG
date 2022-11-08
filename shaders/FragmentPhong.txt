@@ -1,0 +1,41 @@
+// Phong Fragment Shader
+#version 400
+
+out vec4 frag_colour;
+
+in vec4 ex_worldPosition;
+in vec4 ex_worldNormal;
+
+uniform vec3 cameraPos;
+uniform vec3 uniformColor;
+
+
+void main ()
+{
+    vec3 lightPosition = vec3(0.0, 0.0, 0.0);
+    vec4 lightColor = vec4( 0.385, 0.647, 0.812, 1.0);
+
+    float specularStrength = 1.0;                                                   // intenzita odrazu
+    float h = 40.0;                                                                 // mocnina pro velikost odrazu svetla: nejvetsi (0, 256> nejmensi
+
+    //!prevest na trislozkovy! - vektory by mely mit jen 3 slozky
+    vec4 lightVector = normalize(vec4(lightPosition, 1) - ex_worldPosition);        // vector fragment -> svetlo
+    float dot_product = max(dot( lightVector, normalize(ex_worldNormal) ), 0.0);    // dot_product = cos uhlu mezi vektorem svetla a normal vektorem
+
+    vec4 diffuse = dot_product * lightColor;
+    vec4 ambient = vec4( 0.1, 0.1, 0.1, 1.0);
+    
+    vec4 cameraDirection = normalize(vec4(cameraPos, 1) - ex_worldPosition);        // vector fragment -> camera
+    vec4 reflectDirection = reflect(-lightVector, ex_worldNormal);
+    
+    float spec = pow(max(dot(cameraDirection, reflectDirection), 0.0), h);
+
+    vec4 specular = vec4 (0.0 , 0.0 , 0.0 , 0.0);
+
+    if (dot ( ex_worldNormal , lightVector ) >= 0.0)
+    {
+        specular = specularStrength * spec * lightColor; 
+    }
+
+    frag_colour = (ambient + diffuse) * vec4(uniformColor, 1) + specular;
+}

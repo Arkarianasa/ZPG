@@ -7,20 +7,22 @@
 #include "Render.h"
 #include "Shader.h"
 #include "RenderedObject.h"
-#include "Model.h"
 #include "CallbackMethods.h"
 #include "Scene.h"
 
+#include "Model.h"
+#include "ColorModel.h"
+#include "ModelSphere.h"
+#include "ModelSuziFlat.h"
+#include "ModelTree.h"
+#include "ModelPlain.h"
+#include "ModelBushes.h"
+#include "ModelGift.h"
 
 class Application
 {
 private:
 	static Application* app;
-	//static void error_callback(int error, const char* description);
-	//static void window_focus_callback(GLFWwindow* window, int focused);
-	//static void window_iconify_callback(GLFWwindow* window, int iconified);
-	//static void window_size_callback(GLFWwindow* window, int width, int height);
-	//static void button_callback(GLFWwindow* window, int button, int action, int mode);
 
 	GLFWwindow* window;
 
@@ -28,5 +30,4 @@ public:
 	static Application* getInstance();
 	~Application();
 	void draw();
-	//void setCallbacks();
 };

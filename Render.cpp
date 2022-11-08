@@ -125,8 +125,9 @@ void Render::setScene(Scene* s)
 
 void Render::draw()
 {
+	glEnable(GL_DEPTH_TEST);
 	while (!glfwWindowShouldClose(window)) {
-		// clear color and depth buffer
+		// clear normal and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		scene->draw();
