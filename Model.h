@@ -12,5 +12,7 @@ public:
 	uint32_t count;
 	Model(ColorPoint* vertices, uint32_t c);
 	~Model();
+	void loadModel(const char* file);
 };
 
+//predelat na abstract a budou dedit dalsi tridy jednotlivych modelu - kulicka, apod.

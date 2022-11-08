@@ -3,8 +3,6 @@
 RenderedObject::RenderedObject(Model* m)
 {
   mMatrix = glm::mat4(1.0f);
-  vMatrix = glm::mat4(1.0f);
-  pMatrix = glm::mat4(1.0f);
 
   model = m;
 
@@ -32,6 +30,11 @@ void RenderedObject::addShader(Shader s)
   shader = s;
 }
 
+Shader* RenderedObject::getShader()
+{
+  return &shader;
+}
+
 void RenderedObject::rotate(float angle, glm::vec3 axes)
 {
   mMatrix *= glm::rotate(glm::mat4(1.0f), angle, axes);
@@ -57,7 +60,7 @@ void RenderedObject::scale(float s)
 void RenderedObject::draw()
 {
 
-  shader.useShaderProgram(mMatrix, vMatrix, pMatrix);
+  shader.useShaderProgram(mMatrix);
 
   glBindVertexArray(VAO);
   glDrawArrays(GL_TRIANGLE_FAN, 0, model->count); //mode, first, count

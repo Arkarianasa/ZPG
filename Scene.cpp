@@ -1,8 +1,11 @@
 #include "Scene.h"
 
+#include "Camera.h"
+
 Scene::Scene()
 {
-
+	camera = new Camera(this);
+	CallbackMethods::getInstance()->setCamera(camera);
 }
 
 Scene::~Scene()
@@ -12,7 +15,18 @@ Scene::~Scene()
 
 void Scene::addObject(RenderedObject* object)
 {
+	glm::mat4 vm = camera->getCameraLookAt();
+
+	camera->registerObserver(object->getShader());
+	camera->notify();
+
 	objects.push_back(object);
+}
+
+void Scene::removeObject(RenderedObject* object)
+{
+	objects.erase(std::remove(objects.begin(), objects.end(), object), objects.end());
+	camera->removeObserver(object->getShader());
 }
 
 void Scene::draw()

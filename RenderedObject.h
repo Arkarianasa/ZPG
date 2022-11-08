@@ -19,11 +19,12 @@ private:
 	Model* model;
 	GLuint VAO = 0;
 	Shader shader;
-	glm::mat4 mMatrix, vMatrix, pMatrix; // transformacni matice
+	glm::mat4 mMatrix; // transformacni modelova matice
 
 public:
 	RenderedObject(Model* m);
 	void addShader(Shader s);
+	Shader* getShader();
 	void draw();
 	void rotate(float angle, glm::vec3 axes);
 	void rotateAroundPoint(float angle, glm::vec3 axes, glm::vec3 vector);

@@ -8,10 +8,12 @@ void Render::window_focus_callback(GLFWwindow* window, int focused) { printf("wi
 
 void Render::window_iconify_callback(GLFWwindow* window, int iconified) { printf("window_iconify_callback \n"); }
 
+/*
 void Render::window_size_callback(GLFWwindow* window, int width, int height) {
 	printf("resize %d, %d \n", width, height);
 	glViewport(0, 0, width, height);
 }
+*/
 
 void Render::button_callback(GLFWwindow* window, int button, int action, int mode) {
 	if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
@@ -25,7 +27,9 @@ void Render::setCallbacks()
 
 	glfwSetWindowIconifyCallback(window, window_iconify_callback);
 
-	glfwSetWindowSizeCallback(window, window_size_callback);
+	glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) -> void {
+		CallbackMethods::getInstance()->window_size_callback(window, width, height);
+		});
 
 	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mode) -> void {
 		CallbackMethods::getInstance()->key_callback(window, key, scancode, action, mode);
@@ -43,7 +47,7 @@ Render::~Render()
 
 Render::Render()
 {
-
+	scene = NULL;
 }
 
 Render* Render::getInstance()
@@ -56,6 +60,7 @@ Render* Render::getInstance()
 
 void Render::initialization()
 {
+	/*
 	//GLM test
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.01f, 100.0f);
@@ -66,7 +71,7 @@ void Render::initialization()
 		glm::vec3(0, 0, 0), // and looks at the origin
 		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
 	);
-
+	*/
 	//glfwSetErrorCallback(error_callback);
 	if (!glfwInit()) {
 		fprintf(stderr, "ERROR: could not start GLFW3\n");
@@ -91,6 +96,8 @@ void Render::initialization()
 	// start GLEW extension handler
 	glewExperimental = GL_TRUE;
 	glewInit();
+
+
 
 	// get version info
 	printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
@@ -126,6 +133,7 @@ void Render::draw()
 
 		// update other events like input handling
 		glfwPollEvents();
+
 		// put the stuff we’ve been drawing onto the display
 		glfwSwapBuffers(window);
 	}

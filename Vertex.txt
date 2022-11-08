@@ -9,6 +9,8 @@ out vec3 color;
 
 void main ()
 {
-	gl_Position = modelMatrix * viewMatrix * projectionMatrix * vec4 (in_position, 1.0);
+	//gl_Position = modelMatrix * viewMatrix * projectionMatrix * vec4 (in_position, 1.0);
+	//gl_Position = modelMatrix * viewMatrix * vec4 (in_position, 1.0);
+	gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4 (in_position, 1.0);
 	color = in_color;
 }
